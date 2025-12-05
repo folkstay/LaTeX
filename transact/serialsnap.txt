@@ -1,0 +1,116 @@
+Окно 1: Долгая транзакция чтения
+
+SET TRANSACTION ISOLATION LEVEL SNAPSHOT;
+BEGIN TRANSACTION;
+
+-- Читаем данные (видим снимок на момент начала транзакции)
+SELECT 'Окно 1: Начало транзакции', GETDATE() as Время, * FROM Products;
+
+-- Ждем 10 секунд, чтобы успеть выполнить изменения в Окне 2
+WAITFOR DELAY '00:00:10';
+
+-- Читаем снова (видим ТЕ ЖЕ САМЫЕ данные, хотя в Окне 2 уже изменили)
+SELECT 'Окно 1: После 10 секунд', GETDATE() as Время, * FROM Products;
+
+COMMIT;
+
+
+
+Окно 2: Изменения во время работы Окна 1
+
+WAITFOR DELAY '00:00:02';
+
+-- Меняем данные (это НЕ БЛОКИРУЕТ чтение в Окне 1!)
+UPDATE Products SET Price = Price * 1.1; -- Увеличиваем цены на 10%
+SELECT 'Окно 2: Изменил цены', GETDATE() as Время, * FROM Products;
+
+-- Добавляем новый продукт
+INSERT INTO Products (Name, Price, Quantity) 
+VALUES (N'Наушники', 5000.00, 15);
+SELECT 'Окно 2: Добавил наушники', GETDATE() as Время, * FROM Products;
+
+
+Пример 2: SERIALIZABLE изоляция
+
+Окно 1: SERIALIZABLE транзакция
+
+-- Устанавливаем самый строгий уровень изоляции
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+
+-- Читаем все продукты дешевле 150 рублей
+SELECT 'Окно 1: Начинаю чтение', GETDATE() as Время, * 
+FROM Products 
+WHERE Price < 150;
+
+-- Ждем 10 секунд
+WAITFOR DELAY '00:00:10';
+
+-- Пытаемся добавить новый продукт в этот же диапазон цен
+INSERT INTO Products (Name, Price, Quantity)
+VALUES (N'Груша', 90.00, 120);
+
+SELECT 'Окно 1: После вставки', GETDATE() as Время, * FROM Products;
+
+COMMIT;
+
+
+
+Окно 2: Попытка изменить данные во время SERIALIZABLE транзакции
+
+-- Ждем 2 секунды
+WAITFOR DELAY '00:00:02';
+
+-- Попытка 1: Добавить продукт в тот же диапазон (БУДЕТ ЖДАТЬ!)
+-- Этот INSERT заблокирован, потому что Окно 1 читало диапазон Price < 150
+-- и SERIALIZABLE блокирует ВЕСЬ ДИАПАЗОН
+SELECT 'Окно 2: Пытаюсь добавить киви...' as Сообщение;
+INSERT INTO Products (Name, Price, Quantity)
+VALUES (N'Киви', 110.00, 90); -- БЛОКИРОВКА!
+
+-- Попытка 2: Изменить существующий продукт (тоже будет ждать)
+UPDATE Products SET Price = 130 WHERE Name = N'Банан'; -- БЛОКИРОВКА!
+
+-- Попытка 3: Добавить продукт в ДРУГОЙ диапазон (это может сработать)
+INSERT INTO Products (Name, Price, Quantity)
+VALUES (N'Манго', 200.00, 30); -- Этот INSERT может пройти, т.к. цена 200 > 150
+
+
+
+-- Окно 1: Активная транзакция с изменением
+/*
+BEGIN TRANSACTION;
+UPDATE DemoTable SET Value = 999 WHERE ID = 1;
+-- НЕ КОММИТИМ СРАЗУ!
+*/
+
+-- Окно 2: Тестируем разные уровни изоляции
+/*
+-- 1. READ UNCOMMITTED (грязное чтение)
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SELECT 'READ UNCOMMITTED: ', * FROM DemoTable; -- Видит 999
+
+-- 2. READ COMMITTED (ждет завершения)
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SELECT 'READ COMMITTED: ', * FROM DemoTable; -- Ждет или видит старые данные
+
+-- 3. REPEATABLE READ 
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN TRANSACTION;
+SELECT 'REPEATABLE READ: ', * FROM DemoTable WHERE ID = 2;
+-- Теперь Окно 1 не может изменить строку с ID=2
+COMMIT;
+
+-- 4. SNAPSHOT (если включен)
+SET TRANSACTION ISOLATION LEVEL SNAPSHOT;
+BEGIN TRANSACTION;
+SELECT 'SNAPSHOT: ', * FROM DemoTable; -- Видит снимок
+COMMIT;
+
+-- 5. SERIALIZABLE (самый строгий)
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+SELECT 'SERIALIZABLE: ', * FROM DemoTable WHERE Value > 50;
+-- Теперь Окно 1 не может добавить строки с Value > 50
+COMMIT;
+*/
