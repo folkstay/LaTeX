@@ -1,186 +1,323 @@
-% fancytikzposter.tex, version 2.1
-\documentclass{a0poster}
-\usepackage{fancytikzposter} 
-\usepackage[T2A]{fontenc}
+\documentclass[fullscreen=true,unicode,bookmarks=false]{beamer}
+% Standard packages
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[T2A,T1]{fontenc}
+\usepackage{wrapfig}
+\usepackage{graphicx} % Графика
+\setbeamertemplate{caption}[numbered]
+\usepackage{hyperref} % Навигация по ссылкам в документе % Продвинутое цитирование
+%\usepackage{cite}
+\usepackage{color} %% это для отображения цвета в коде
+\usepackage{listings} %% собственно, это и есть пакет listings
+\usepackage{bm}
+\usepackage{floatflt}
+\usepackage{caption}
+\mode<presentation>
+%{
+% % or ...
+
+% % or whatever (possibly just delete it)
+%}
+
+% Setup appearance:
+\usetheme{Singapore}
+%\usetheme{Rochester}
+%\usetheme{Frankfurt}
+%\usetheme{Darmstadt}
+%\usetheme{Warsaw}
+%\usetheme{Boadilla}
+\usecolortheme{seahorse}
+
+%\useinnertheme[shadow]{rounded}
+\usepackage{tikz}
+\usepgflibrary{arrows}
 \usepackage{graphicx}
 
-\usepackage{relsize}
-\usepackage{anyfontsize}
+\definecolor{MidnightBlue}{rgb}{0.2,0.2,0.7}
+\definecolor{myblue}{rgb}{0.2,0.5,0.9}
+\definecolor{lightyellow}{rgb}{1,1,0.7}
+\definecolor{lightblue}{rgb}{0.7,0.8,1}
+\definecolor{lightgreen}{rgb}{0.6,1,0.6}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{greenyellow}{rgb}{0.8,1,0.6}
+\definecolor{ellipsecolor}{rgb}{0.8,1,0.8}
+\definecolor{lightgray}{rgb}{0.7,0.7,0.7}
+\definecolor{myred}{rgb}{0.8,0.2,0.2}
+\definecolor{mypink}{rgb}{0.97,0.90,0.93} 
+
+\tikzstyle{thickr}=[thick, myred]
+
+% Animation
+\newdimen\offset 
 
 
+%\setbeamercovered{transparent}
+\setbeamertemplate{navigation symbols}{}
+%\usefonttheme[onlylarge]{structurebold}
+%\setbeamerfont*{frametitle}{size=\normalsize,series=\bfseries}
+
+% New commands
+\newcommand{\R}{\mathbb{R}} %Set of real numbers
+\newcommand{\N}{\mathbb{N}} %Set of natural numbers
+\newcommand\op[1]{\mathop{\rm #1}\nolimits}
+\newcommand\conv{\op{conv}}
+\newcommand\len{\op{len}}
+\newcommand\ext{\op{ext}}
+\renewcommand{\le}{\leqslant} 
+\renewcommand{\ge}{\geqslant} 
+
+\newtheorem{mytheorem}{Theorem}
+\newtheorem{mylemma}{Lemma}
+\newtheorem{mycorollary}{Corollary}
+\theoremstyle{example}
+\newtheorem{myexample}{Example}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\theoremstyle{definition}
+\newtheorem{mydefinition}{Definition}
 
 
-\setmargin{1}
-\setblockspacing{1}
-\setcolumnnumber{2}
-\usetemplate{1}
+\newcommand{\vo}{{\rm vol}}
+\newcommand{\ver}{{\rm ver}}
 
-\setblockspacing{1}
-\setcolumnnumber{2}
-\definecolor{myblue}{HTML}{008888} 
-%\setfirstcolor{myblue}% default 116699
-%\setsecondcolor{gray!80!}% default CCCCCC
-\setthirdcolor{white!80!black}% default 991111
 
-\usepackage[margin=\margin cm, paperwidth=84.1cm, paperheight=118.9cm]{geometry}
+\newcommand{\eps}{\varepsilon}
+\newtheorem{Def}{Определение}
+\newtheorem{Th1}{Теорема}
 
-\usepackage{cmbright}
-\usepackage[math]{kurier}
+\setbeamercolor{section in head/foot}{bg=mypink,fg=white}
+\setbeamercolor{palette primary}{bg=mypink,fg=black}
+%\setbeamercolor{palette secondary}{bg=darkgreen,fg=white}
+%\setbeamercolor{palette tertiary}{bg=MidnightBlue,fg=white}
+%\setbeamercolor{palette quaternary}{bg=myblue,fg=white}
 
-\title{Определители: свойства и вычисление}
-\author{Довгань М.Д.\\
-irasuperstar@yandex.ru\\
-   Ярославский государственный университет им. П. Г. Демидова\\
-  %\texttt{iliyask@uniyar.ac.ru, igor.maslenikov16@yandex.ru}
-}
+\setbeamercolor{itemize item}{fg=myred} % цвет кружочков первого уровня
+\setbeamercolor{itemize subitem}{fg=darkgreen} % цвет кружочков второго уровня
+\setbeamercolor{itemize subsubitem}{fg=myblue} % цвет кружочков третьего уровня
+
+
+\title[Indie Web: Как вернуть себе интернет]
+{Indie Web: Как вернуть себе интернет\\От платформ — к личному пространству.
+\vspace{4mm}
+\textbf{М.\,Д. Довгань}\\
+folkstay@mail.ru\\
+ЯрГУ им. П.\,Г. Демидова} 
+
+
+\author{}
+
+\institute{}
+\date{} 
+% \logo{\includegraphics[height=5mm]{images/logo.png}\vspace{-7pt}}
 
 \begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% титульный слайд
+\begin{frame}
+\titlepage
+\begin{flushright}
+Преподаватель И.Н. Маслеников\\
+\end{flushright}
+\begin{center}
+10 декабря 2025
+\end{center}
+\end{frame} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ClearShipoutPicture
-\AddToShipoutPicture{\BackgroundPicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Вопросы}
 
-\noindent
-\begin{tikzpicture}
-  \initializesizeandshifts
-
-  %% Заголовок в том же формате как в исходном постере
-  \ifthenelse{\equal{\template}{1}}{ 
-    \titleblock{51}{1}%47
-  }{
-    \titleblock{51}{1.5}%47
-  }
-  \addlogo[south west]{(2,2)}{5cm}{yarsu_logor.png}%2
-
-
-\calloutblock{(0,43)}{(0,43)}{78cm}
-{
-
-\textbf{\LARGE  Перестановки}
-\vspace{0.5cm}
-
-\raggedright
-\fontsize{42}{38}\selectfont % Добавлен \selectfont
-\textbf{Определение 1.} \textit{Перестановкой} чисел $1, 2, \ldots, n$ называется их расположение в строку. Иначе говоря, перестановка порядка $n$ есть упорядоченный набор $\alpha := (\alpha_1, \ldots, \alpha_n)$ такой, что все компоненты $\alpha_j$ попарно различны и принадлежат множеству $W_n := \{1, \ldots, n\}$.
-
-
-\textbf{Определение 2.} С перестановкой $\alpha$ естественным образом связывают понятие \textit{подстановки} порядка $n$, то есть взаимно-однозначного отображения множества $W_n$ на себя. Подстановка, обозначаемая тем же символом $\alpha$, изображается в виде двустрочной таблицы:
-
-\setcounter{equation}{0}
-\begin{equation}
-\alpha = \begin{pmatrix}
-1 & 2 & \ldots & n \\
-\alpha_1 & \alpha_2 & \ldots & \alpha_n
-\end{pmatrix}.
-\end{equation}
-
-Имеется в виду, что $j \mapsto \alpha_j$ или $\alpha_j := \alpha(j)$ (как и всегда для функций натурального аргумента).
-
-\textbf{Определение 3.} На множестве всех подстановок порядка $n$ можно рассмотреть операцию \textit{суперпозиции} $\circ$, определяемую, как обычно, равенством:
-\begin{equation}
-\alpha \circ \beta(j) := \alpha(\beta(j)), \quad j = 1, \ldots, n.
-\end{equation}
-
-}
-
-
-
-
-
-
-\plainblock[0]{($(-20,17.0)$)}{38}{\LARGE Свойства перестановок}
-{
-
-\fontsize{42}{38}\selectfont % Тот же размер шрифта% Увеличивает расстояние между абзацами
-
-\textbf{1\textdegree.} Количество всех перестановок порядка $n$ равно $n!$.
-
-\setlength{\parskip}{1.0em}
-
-\textbf{2\textdegree.} Любая транспозиция меняет чётность перестановки.
-
-\textbf{3\textdegree.} Число чётных перестановок порядка $n > 1$ совпадает с числом нечётных и равно $n!/2$.
-
-\textbf{4\textdegree.} Если $\beta = \alpha^*$, то $\beta^* = \alpha$. Иначе говоря, $(\alpha^*)^* = \alpha$.
-
-\textbf{5\textdegree.} $s(\alpha^*) = s(\alpha)$.
-}
-
-
-\plainblock[0]{($(20,17.0)$)}{40}{\LARGE Определители} %
-{
-
-\fontsize{42}{38}\selectfont
-\textbf{Определение 4.} \textit{Определителем} квадратной матрицы $A = (a_{ij})$ порядка $n$ называется число:
-
-\setcounter{equation}{2} % Устанавливает счетчик на 3
-\begin{equation}
-|A| = \det(A) := \sum_{\alpha} (-1)^{s(\alpha)} a_{1\alpha_1} a_{2\alpha_2} \ldots a_{n\alpha_n},
-\end{equation}
-% Уравнение получит номер 4 (3+1)
-где суммирование осуществляется по множеству всех перестановок порядка $n$.
-}
-
-\plainblock[0]{($(20,1.0)$)}{40}{\LARGE Свойства определителя}
-{
-
-\fontsize{42}{38}\selectfont
-
-\textbf{1\textdegree.} Определитель линеен по каждой строке.
-\setlength{\parskip}{1.0em}
-
-\textbf{2\textdegree.} При умножении строки на число определитель умножается на это число.
-
-\textbf{3\textdegree.} Определитель с нулевой строкой равен нулю.
-
-\textbf{4\textdegree.} Определитель с двумя одинаковыми строками равен нулю.
-
-\textbf{5\textdegree.} Определитель не меняется при прибавлении к строке линейной комбинации других строк.
-
-\textbf{6\textdegree.} При перестановке двух строк определитель меняет знак.
-
-\textbf{7\textdegree.} Определитель не меняется при транспонировании: $|A^T| = |A|$.
-
-\textbf{8\textdegree.} Определитель треугольной матрицы равен произведению элементов главной диагонали.
-}
-
-\plainblock[0]{($(-20,-6.0)$)}{38}{\LARGE Правило Крамера}
-{
-
-\fontsize{42}{38}\selectfont
-\setlength{\parskip}{1.0em}
-
-\textbf{Теорема 1.} Система линейных уравнений $Ax = b$ является определённой тогда и только тогда, когда $|A| \neq 0$.
-
-\textbf{Следствие 1.} Однородная система $Ax = 0$ имеет ненулевое решение $\Leftrightarrow |A| = 0$.
-
-\textbf{Следствие 2.} $|A| = 0 \Leftrightarrow$ строки (и столбцы) $A$ образуют линейно зависимую систему.
-
-\textbf{Теорема 2 (Правило Крамера).} Пусть $d := |A| \neq 0$. Тогда единственное решение системы $Ax = b$ имеет вид:
-\setcounter{equation}{3}
-\begin{equation}
-x_i = \frac{d_i}{d}, \quad i = 1, \ldots, n,
-\end{equation}
-где $d_i$ — определитель, получающийся из $d$ заменой $i$-го столбца на столбец свободных членов.
-
-\textbf{Замечания:}
 \begin{itemize}
-\item Если $|A| = 0$, но хотя бы один $d_i \neq 0$, то система несовместна
-\item Если $|A| = d_1 = \ldots = d_n = 0$, система может быть как несовместной, так и неопределённой
+\item Что не так с современным интернетом?
+\item Что такое Indie Web
+\item Преимущества Indie Web
+\item Как начать? 
+\item Neocities
+\item Как распространяются сайты?
+
 \end{itemize}
-}
 
 
-\plainblock[0]{($(0,-50)$)}{78}{\LARGE Список литературы} % -31.25
-  {
-        \fontsize{42}{38}\selectfont
-\begin{enumerate}
-\bibitem{S1}
-{\it Невский М.В.} Лекции по алгебре : Учеб. пособие / Яросл. гос. ун-т. Ярославль, 2002. 265 с. ISBN 5-8397-0202-1
-\end{enumerate}
-    
-    }
-\end{tikzpicture}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Что не так с современным интернетом?}
+
+\begin{itemize}
+\item Вы публикуете мысли, фото, творчество — но все это принадлежит платформе.
+\item Алгоритмы решают, кто увидит ваш контент.
+\item Правила могут измениться в любой момент, а аккаунт — быть заблокированным.
+\item Платформы завалены нейросетевым мусором.
+\end{itemize}
+
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Решение: Indie Web}
+
+\textbf{IndieWeb} — это ориентированная на людей альтернатива «корпоративному интернету».
+
+\vspace{4mm}
+
+\textbf{Основная идея} - это владение собственным доменом
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Преимущества}
+
+\begin{itemize}
+\item \textbf{Творческий контроль:} Дизайн вашего сайта именно такой, как вы хотите. Нет навязанных шаблонов или ограничений по количеству символов.
+\item \textbf{Владение контентом:} Ваши статьи, фото и идеи остаются вашими. 
+\item \textbf{Долговечность:} Ваш сайт существует столько, сколько вы его поддерживаете. Нет закрытия платформ, стирающих годы работы.
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Основной принцип:}
+
+\textbf{Основной принцип:} Publish (on your) Own Site, Syndicate Elsewhere (POSSE). Публикуй на своем сайте, а потом распространяй  в соцсети.
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Что нужно чтобы начать?}
+
+\begin{itemize}
+\item Создать домен
+\item Настроить хостинг
+\item Начать вести блог
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Neocities}
+\textbf{Neocities} — это бесплатный хостинг, позволяющий создать собственный HTML-сайт с нуля, с полным контролем над его функционалом.
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=0.7\textwidth]{images.png}\\
+\textbf{Логотип Neocities}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{neocities.png}\\
+\textbf{Главная страница}
+\end{column}
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Примеры сайтов}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{1.png}\\
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{2.png}\\
+\end{column}
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Пример личного блога}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{3.png} % маленькая и по центру
+\end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{4.png}\\
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{5.png}\\
+\end{column}
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Как найти сайт?}
+
+\begin{itemize}
+\item \textbf{Веб-кольцо} — объединение веб-сайтов, при котором каждый участник кольца размещает ссылки на следующего и предыдущего членов кольца. 
+\item \textbf{Каталоги по интересам:} Люди вручную составляют списки блогов на определенные темы
+\item \textbf{Webmention }— это открытый стандарт и протокол для децентрализованных уведомлений и взаимодействий между сайтами.
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Коммьюнити}
+
+
+\begin{itemize}
+\textbf{IndieWebCamp (IWC):} Оффлайн-мероприятия, которые проходят по всему миру (Нью-Йорк, Берлин, Портленд и др.) и онлайн. 
+\item \textbf{Homebrew Website Club (HWC):} Регулярные, более камерные онлайн- и оффлайн-встречи.
+\item \textbf{Discord}
+\item \textbf{GitHub:} Здесь ведется вся техническая работа: обсуждение и разработка стандартов (Webmention, Microformats)
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Вывод: Интернет, каким он должен быть}
+
+\begin{center}
+\LARGE \textbf{Indie Web — это не о технологиях.\\ Это о \textcolor{myred}{свободе}.}
+\end{center}
+
+\vspace{5mm}
+
+\begin{itemize}
+    \item Свободе \textbf{владеть} своими текстами, фотографиями, памятью.
+    \item Свободе \textbf{выражать} себя без алгоритмических ограничений.
+    \item Свободе \textbf{строить} долговечные связи, а не гнаться за лайками.
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
 \end{document}
