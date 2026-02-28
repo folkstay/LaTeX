@@ -3,8 +3,12 @@ largestDivisible = head(filter p [1000000,999999..])
   where p x = x `mod` 4723==0
 
 --сумму всех нечётных квадратов меньше 50000
+-- sum(takeWhile(<50000) (filter odd (map (^2) [1..])))
 
 
+
+-- let sumFuncs = map (+) [0..]
+-- (sumFuncs !! 10) 1
 
 filter' :: (a->Bool) -> [a] -> [a]
 filter' _ [] = []
