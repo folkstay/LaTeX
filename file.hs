@@ -1,6 +1,7 @@
-flip' :: (a -> b -> c) -> (a -> b -> c)
+flip' :: (a -> b -> c) -> (b -> a -> c)
 flip' f = g 
   where g y x = f x y
+
 
 zipWith' :: (a->b->c) -> [a] -> [b] -> [c]
 zipWith' _ [] _ = []
