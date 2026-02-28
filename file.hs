@@ -1,3 +1,21 @@
+largestDivisible :: Integer
+largestDivisible = head(filter p [1000000,999999..])
+  where p x = x `mod` 4723==0
+
+--сумму всех нечётных квадратов меньше 50000
+
+
+
+filter' :: (a->Bool) -> [a] -> [a]
+filter' _ [] = []
+filter' p (x:xs)
+  | p x = x : filter' p xs
+  | otherwise = filter' p xs
+
+map' :: (a->b) -> [a] -> [b]
+map' _ [] = []
+map' f (x:xs) = f x : map' f xs
+
 flip' :: (a -> b -> c) -> (b -> a -> c)
 flip' f = g 
   where g y x = f x y
