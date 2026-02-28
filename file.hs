@@ -1,3 +1,44 @@
+flip' :: (a -> b -> c) -> (a -> b -> c)
+flip' f = g 
+  where g y x = f x y
+
+zipWith' :: (a->b->c) -> [a] -> [b] -> [c]
+zipWith' _ [] _ = []
+zipWith' _ _ [] = []
+zipWith' f(x:xs) (y:ys) = f x y : zipWith' f xs ys
+
+
+--isMoreThanTen :: (Ord a, Num a) => a -> a ->String
+
+
+--Функции высшего порядка принимают в качестве аргумента другую функцию или возвращают функцию 
+--каждая функция принимает ровно 1 параметр, каждая функция коррирована
+--max 4 5 = (max 4) 5
+multiplyThreeNumbers :: Num a => a -> a -> a -> a
+multiplyThreeNumbers x y z = x * y * z
+
+
+multiplyTwoNumbersOnTen :: Num a => a -> a -> a
+multiplyTwoNumbersOnTen = multiplyThreeNumbers 10
+
+--Целое чисто x возвести в целую степень y
+power :: Int -> Int -> Int
+power _ 0 = 1
+power x y 
+  | y < 0 = error "error"
+  | otherwise = x * power x (y-1)
+
+
+--Числа фиббоначи
+fib :: (Num a, Eq a) => a -> [a]
+fib 0 = [0]
+fib 1 = [0, 1]
+fib n = 
+  let prev = fib (n-1)
+      lastTwo = last prev + last (init prev)
+  in prev ++ [lastTwo]
+
+
 quicksort :: (Ord a) => [a] -> [a]
 quicksort [] = []
 quicksort (p:xs) =
