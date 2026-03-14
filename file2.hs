@@ -1,3 +1,10 @@
+sumDigits :: String -> Int
+sumDigits str = foldl (\acc c -> acc + digitToInt c) 0 str
+  where
+    digitToInt c = read [c] :: Int
+
+--на вход принимает строку с числом а возвращает сумму цифр в числе. Для решения использовать свёртки
+
 --Доллор иммет самый низкий преоритет
 -- ($) :: (a ->b ) -> a -> b 
 --f $ x = f x
@@ -5,6 +12,8 @@
 
 -- sum (map sqrt [1..1000])
 -- sum $ map sqrt [1..1000]
+-- sqrt 3 + 8 + 11
+-- sqrt $ 3 + 8 + 11
 
 drop' :: Int -> [a] -> [a]
 drop' n xs = foldr (\x acc -> \k -> if k > 0 then acc (k-1) else x : acc 0) (const []) xs n
