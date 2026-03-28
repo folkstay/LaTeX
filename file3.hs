@@ -1,3 +1,6 @@
+
+
+
 tank (model, attack, hp) = \msg -> msg(model, attack, hp)
 -- let myTank = tank ("T34", 20, 100)
 model (m, _, _) = m
@@ -31,12 +34,22 @@ fight aTank dTank = damage dTank attack
 repair sTank repairAmount maxHp = sTank (\(m, a, h) ->
   tank (m, a, min maxHp (h + repairAmount)))
 
+battleRound (tankA, tankB) = (newA, newB)
+  where
+    newA = tankA(\(mA, aA, hA)->
+             tankB(\(_, aB, hB)->
+               let dmg = if hB > 0 then aB else 0
+               in tank (mA, aA, max 0 (hA-dmg))))
+    newB = tankB (\(mB))
+
 getTankModel sTank = sTank model
 
 getTankAttack sTank = sTank attack
 
 getTankHealth sTank = sTank health
 
+getTanksHealth :: [((String, Int, Int) -> Int) -> Int] -> [Int]
+getTanksHealth tanks = map getTankHealth tanks
 --COFFEE
 -----------------------------------------
 hotCup (ml, temp) = \msg -> msg (ml, temp)
